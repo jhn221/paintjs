@@ -4,6 +4,7 @@ const colors = document.getElementsByClassName("jsColors");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const saveBtn = document.getElementById("jsSave");
+const lineBtn = document.getElementById("jsLine");
 
 const INITIAL_COLOR = "#2c2c2c"
 const CANVAS_SIZE = 500;
@@ -19,6 +20,8 @@ ctx.lineWidth = 4;
 
 let painting = false;
 let filling = false;
+let isPressed = false;
+let mouseDownPos = null;
 
 function stopPainting() {
     painting = false;
@@ -54,7 +57,7 @@ function handleRangeChange(event) {
 function handleModeClick() {
     if(filling === true) {
         filling = false;
-        mode.innerText = "Fill"
+        mode.innerText = "Fill";
     } else {
         filling = true;
         mode.innerText = "Paint";
@@ -77,6 +80,39 @@ function handleSaveClick () {
     link.download = "Download_Paint[🎨]";
     link.click ();
 }
+document.addEventListener('mousedown',function(event){
+    isPressed = true
+    mouseDownPos = {
+        x : event.offsetX - canvas.offsetLeft,
+        y : event.offsetY - canvas.offsetTop
+    }
+
+    const line = {
+        start: mouseDownPos,
+        end : mouseDownPos,
+    }
+}
+)
+//function DrowLine (event) {
+   document.addEventListener("mouseup", function (){
+    isPressed = false
+   })
+   document.addEventListener("mousemove", function (event){
+    console.log('isPressed: ', isPressed)
+    if(isPressed) {
+        let currentPos = {
+            x : event.offsetX - canvas.offsetLeft,
+            y : event.offsetY - canvas.offsetTop
+        }
+    let line = {
+        start:mouseDownPos,
+        end:currentPos
+    }
+    ctx.stroke()
+    }
+   })
+
+//} 
 
 if(canvas) {
     canvas.addEventListener("mousemove", onMouseMove);
@@ -100,3 +136,6 @@ if (mode) {
 if (saveBtn) {
     saveBtn.addEventListener("click", handleSaveClick);
 }
+//if (lineBtn) {
+//    lineBtn.addEventListener("click",DrowLine);
+//}
