@@ -4,6 +4,7 @@ const colors = document.getElementsByClassName("jsColors");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const saveBtn = document.getElementById("jsSave");
+const lineBtn = document.getElementById("jsLine");
 
 const INITIAL_COLOR = "#2c2c2c"
 const CANVAS_SIZE = 500;
@@ -37,6 +38,7 @@ function onMouseMove(event) {
     } else {
         ctx.lineTo(x,y);
         ctx.stroke();
+        ctx.closePath();
     }
 }
 
@@ -77,7 +79,30 @@ function handleSaveClick () {
     link.download = "Download_Paint[🎨]";
     link.click ();
 }
+if(lineBtn){
+function handledrawLine (event) {
+  //  const ex = event.offsetX;
+  //  const ey = event.offsetY;
+  //  if (drawing) {
+  //      ctx.putImageData(backup, 0, 0);
+  //      ctx.beginPath();
+  //      ctx.moveTo(x, y);
+  //      ctx.lineTo(ex, ey);
+  //      ctx.stroke();
+ // const x = event.offsetX;
+ // const y = event.offsetY;
+    backup = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  if(!painting){
+    ctx.putImageData(backup, 0, 0);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+  } else {
+      ctx.lineTo(x,y);
+      ctx.stroke();
 
+    }
+}
+}
 if(canvas) {
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPainting);
@@ -85,6 +110,7 @@ if(canvas) {
     canvas.addEventListener("mouseleave",stopPainting);
     canvas.addEventListener("click", handleCanvasClick);
     canvas.addEventListener("contextmenu", handleCM);
+    canvas.addEventListener("mousedown",handledrawLine);
 }
 
 Array.from(colors).forEach(color => color.addEventListener("click", handleColorClick));
@@ -99,4 +125,7 @@ if (mode) {
 
 if (saveBtn) {
     saveBtn.addEventListener("click", handleSaveClick);
+}
+if (lineBtn) {
+    lineBtn.addEventListener("click",handledrawLine);
 }
